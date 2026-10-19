@@ -1,0 +1,56 @@
+# ============================================================
+# TTS 统一服务 Docker Compose
+#
+# 构建:  docker-compose build
+# 启动:  docker-compose up -d
+# 注意:  构建成功后可用 docker commit 导出镜像，后续不用重复 build
+# ============================================================
+
+services:
+  # -------- Edge TTS（微软 Edge 免费语音）--------
+  edge:
+    build:
+      context: .
+      args:
+        SERVICE: edge-tts
+    container_name: tts-edge
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+      - TTS_STARTUP_USER=${TTS_STARTUP_USER:-admin}
+      - TTS_STARTUP_PASS=${TTS_STARTUP_PASS:-tts123}
+      - TTS_API_KEY=${TTS_API_KEY:-my-fixed-key-2026}
+    restart: unless-stopped
+
+  # -------- Tianyi（TeleAI 远程超自然/实时/离线）--------
+  tianyi:
+    build:
+      context: .
+      args:
+        SERVICE: tianyi_tts
+    container_name: tts-tianyi
+    ports:
+      - "8900:8900"
+    environment:
+      - PORT=8900
+      - TTS_STARTUP_USER=${TTS_STARTUP_USER:-admin}
+      - TTS_STARTUP_PASS=${TTS_STARTUP_PASS:-tts123}
+      - TTS_API_KEY=${TTS_API_KEY:-my-fixed-key-2026}
+    restart: unless-stopped
+
+  # -------- Gateway（统一入口，转发到 edge + tianyi）--------
+  gateway:
+    build:
+      context: .
+      args:
+        SERVICE: tts_gateway
+    container_name: tts-gateway
+    ports:
+      - "9000:9000"
+    environment:
+      - PORT=9000
+      - TTS_STARTUP_USER=${TTS_STARTUP_USER:-admin}
+      - TTS_STARTUP_PASS=${TTS_STARTUP_PASS:-tts123}
+      - TTS_API_KEY=${TTS_API_KEY:-my-fixed-key-2026}
+    restart: unless-stopped

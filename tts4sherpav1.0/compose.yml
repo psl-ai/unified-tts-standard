@@ -1,0 +1,22 @@
+services:
+  tts_cpu:
+    image: tts4sherpa:v1.0
+    container_name: tts_cpu
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+      - PORT=7899
+      - TTS_API_KEY=${TTS_API_KEY:-}
+      - TTS_MAX_TEXT_LENGTH=1000
+      - TTS_NUM_THREADS=10
+      - TTS_MAX_NUM_SENTENCES=10
+    ports:
+      - "7899:7899"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./app.py:/app/app.py
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"

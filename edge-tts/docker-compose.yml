@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  edge-tts1:
+    container_name: edge-tts1
+    image: edge-tts-api:2.0
+    build: .
+    #working_dir: /app
+    restart: always
+    ports:
+      - "7896:7899"
+    environment:
+      - PORT=7899
+      - TZ=Asia/Shanghai
+      - TTS_API_KEY=${TTS_API_KEY:-}
+
+  edge-tts2:
+    container_name: edge-tts2
+    image: edge-tts-api:2.0
+    build: .
+    restart: always
+    ports:
+      - "7897:7899"
+    environment:
+      - PORT=7899
+      - TZ=Asia/Shanghai
+      - TTS_API_KEY=${TTS_API_KEY:-}
+
+  edge-tts3:
+    container_name: edge-tts3
+    image: edge-tts-api:2.0
+    build: .
+    restart: always
+    ports:
+      - "7898:7899"
+    environment:
+      - PORT=7899
+      - TZ=Asia/Shanghai
+      - TTS_API_KEY=${TTS_API_KEY:-}
